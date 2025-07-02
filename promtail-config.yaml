@@ -1,3 +1,37 @@
+# server:
+#   http_listen_port: 9080
+#   grpc_listen_port: 0
+
+# positions:
+#   filename: ./positions.yaml
+
+# clients:
+#   - url: http://localhost:3100/loki/api/v1/push
+
+# scrape_configs:
+#   - job_name: network_switch
+#     static_configs:
+#       - targets:
+#           - localhost
+#         labels:
+#           job: network_switch
+#           __path__: C:\\pranav\\3.0\\logs\\syslogs-202505012359.log
+
+#     relabel_configs:
+#       - source_labels: ['__path__']
+#         target_label: 'filename'
+#         action: drop
+#       - source_labels: ['__service__']
+#         target_label: 'service_name'
+#         action: drop
+
+#     pipeline_stages:
+#       - regex:
+#           expression: '^(?P<date>[^,]+), (?P<time>[^,]+), (?P<ip>[^,]+), (?P<status>[^,]+), (?P<rest>.*)$'
+#       - labels:
+#           ip:
+#           status:
+
 server:
   http_listen_port: 9080
   grpc_listen_port: 0
@@ -15,19 +49,25 @@ scrape_configs:
           - localhost
         labels:
           job: network_switch
-          __path__: C:\\pranav\\3.0\\logs\\syslogs-202505012359.log
+          __path__: C:\\pranav\\3.0\\logs\\replay-syslogs.log
 
-    relabel_configs:
-      - source_labels: ['__path__']
-        target_label: 'filename'
-        action: drop
-      - source_labels: ['__service__']
-        target_label: 'service_name'
-        action: drop
+    # relabel_configs:
+    #   - source_labels: ['__path__']
+    #     target_label: 'filename'
+    #     action: drop
+    #   - source_labels: ['__service__']
+    #     target_label: 'service_name'
+    #     action: drop
 
     pipeline_stages:
       - regex:
           expression: '^(?P<date>[^,]+), (?P<time>[^,]+), (?P<ip>[^,]+), (?P<status>[^,]+), (?P<rest>.*)$'
+      - regex:
+          expression: '.*?(?P<code>%[A-Z0-9\-]+):.*'
       - labels:
           ip:
           status:
+          code:
+
+
+
